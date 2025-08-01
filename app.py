@@ -48,7 +48,7 @@ if "user_email" not in st.session_state:
     st.session_state.user_email = None
 
 if not st.session_state.logged_in:
-    st.title("🔒 Acesso Divino - Login")
+    st.title("🔒 Acesso Sagrado - Login")
     menu_option = st.radio("Selecione uma opção:", ["Login", "Registrar", "Esqueci a Senha"])
 
     if menu_option == "Login":
@@ -92,10 +92,10 @@ elif st.session_state.logged_in:
         st.image(Image.open(banner_path), width=320)
         st.markdown("</div>", unsafe_allow_html=True)
 
-    st.title("🌟 Bem-vindo ao Portal de Ativação Divina")
+    st.title("🌟 Bem-vindo ao Portal da Chave de Cristo")
     st.markdown("""
     <div style='text-align: center; font-size: 18px; margin-bottom: 30px;'>
-    Descubra ferramentas espirituais que alinham sua alma com a frequência divina original.
+    As 22 Palavras Sagradas que alinham sua alma com a frequência divina original.
     </div>
     """, unsafe_allow_html=True)
 
