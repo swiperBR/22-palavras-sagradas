@@ -1,5 +1,6 @@
 
 import streamlit as st
+import streamlit.components.v1 as components
 import os
 import base64
 from PIL import Image
@@ -37,10 +38,6 @@ st.markdown("""
         width: 100%;
         border-radius: 8px;
         font-weight: bold;
-    }
-    table, th, td {
-        border: none;
-        padding: 6px 12px;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -108,31 +105,6 @@ elif st.session_state.logged_in:
         "🔊 Áudio de Ativação da Frequência Divina"
     ])
 
-    palavras_tabela = [
-        ("אוֹר", "Or", "Luz"),
-        ("שָׁלוֹם", "Shalom", "Paz"),
-        ("אֱמוּנָה", "Emunah", "Fé"),
-        ("רְפוּאָה", "Refuah", "Cura"),
-        ("סְלִיחָה", "Slichah", "Perdão"),
-        ("אֵשׁ", "Esh", "Fogo"),
-        ("חֵן", "Chen", "Graça"),
-        ("חַיִּים", "Chayim", "Vida"),
-        ("אֱמֶת", "Emet", "Verdade"),
-        ("תַּכְלִית", "Tachlit", "Propósito"),
-        ("עֹז", "Oz", "Força"),
-        ("חָכְמָה", "Chokhmah", "Sabedoria"),
-        ("בְּרִית", "Brit", "Aliança"),
-        ("תְּדִירוּת", "Tedirut", "Frequência"),
-        ("נֵס", "Nes", "Milagre"),
-        ("דְּמָמָה", "Demamah", "Silêncio"),
-        ("מַפְתֵּחַ", "Mafteach", "Chave"),
-        ("שַׁעַר", "Sha'ar", "Porta"),
-        ("הִתְעוֹרְרוּת", "Hit'or'rut", "Despertar"),
-        ("תִּקוָה", "Tikvah", "Esperança"),
-        ("מַרְגּוֹעַ", "Margoa", "Alívio"),
-        ("קְרִיאָה", "Kri'ah", "Chamado")
-    ]
-
     def render_audio(folder):
         path = os.path.join("audios", folder)
         if os.path.exists(path):
@@ -146,31 +118,64 @@ elif st.session_state.logged_in:
 
     if menu == "📜 Lista das 22 Palavras Sagradas":
         st.header("📜 As 22 Palavras Hebraicas Sagradas")
-        table_html = '''
-        <table style="width:100%; border-collapse: collapse; font-size: 18px;">
-            <tr>
-                <th style="text-align: left; border-bottom: 1px solid white;">Nº</th>
-                <th style="text-align: left; border-bottom: 1px solid white;">Palavra Hebraica</th>
-                <th style="text-align: left; border-bottom: 1px solid white;">Transliteração</th>
-                <th style="text-align: left; border-bottom: 1px solid white;">Tradução</th>
-            </tr>
-        '''
-        for i, (hebraico, translit, traducao) in enumerate(palavras_tabela, 1):
-            table_html += f'''
-            <tr>
-                <td>{i}</td>
-                <td>{hebraico}</td>
-                <td>{translit}</td>
-                <td>{traducao}</td>
-            </tr>
-            '''
-        table_html += '</table>'
-        st.markdown(table_html, unsafe_allow_html=True)
 
-        pdf_path = "pdfs/As-22-Palavras-Sagradas-22-Oracoes-para-ativacao-de-bencaos.pdf"
-        if os.path.exists(pdf_path):
-            with open(pdf_path, "rb") as f:
-                st.download_button("📥 Baixar PDF com as 22 Palavras + Orações", f, file_name="As-22-Palavras-Sagradas-22-Oracoes-para-ativacao-de-bencaos.pdf")
+        html_code = """
+        <style>
+        .table-scroll {
+          width: 100%;
+          border-collapse: collapse;
+        }
+
+        .table-scroll th, .table-scroll td {
+          border: 1px solid #ffffff55;
+          padding: 8px;
+          text-align: center;
+          color: white;
+        }
+
+        .table-scroll th {
+          background-color: #1e2c48;
+        }
+
+        .table-scroll tr:nth-child(even) {
+          background-color: #162338;
+        }
+        </style>
+        <table class="table-scroll">
+          <thead>
+            <tr><th>Nº</th><th>Hebraico</th><th>Transliteração</th><th>Tradução</th></tr>
+          </thead>
+          <tbody>
+        """
+        palavras = [
+            ("אוֹר", "Or", "Luz"),
+            ("שָׁלוֹם", "Shalom", "Paz"),
+            ("אֱמוּנָה", "Emunah", "Fé"),
+            ("רְפוּאָה", "Refuah", "Cura"),
+            ("סְלִיחָה", "Slichah", "Perdão"),
+            ("אֵשׁ", "Esh", "Fogo"),
+            ("חֵן", "Chen", "Graça"),
+            ("חַיִּים", "Chayim", "Vida"),
+            ("אֱמֶת", "Emet", "Verdade"),
+            ("תַּכְלִית", "Tachlit", "Propósito"),
+            ("עֹז", "Oz", "Força"),
+            ("חָכְמָה", "Chokhmah", "Sabedoria"),
+            ("בְּרִית", "Brit", "Aliança"),
+            ("תְּדִירוּת", "Tedirut", "Frequência"),
+            ("נֵס", "Nes", "Milagre"),
+            ("דְּמָמָה", "Demamah", "Silêncio"),
+            ("מַפְתֵּחַ", "Mafteach", "Chave"),
+            ("שַׁעַר", "Sha'ar", "Porta"),
+            ("הִתְעוֹרְרוּת", "Hit'or'rut", "Despertar"),
+            ("תִּקוָה", "Tikvah", "Esperança"),
+            ("מַרְגּוֹעַ", "Margoa", "Alívio"),
+            ("קְרִיאָה", "Kri'ah", "Chamado"),
+        ]
+        for i, (heb, tr, pt) in enumerate(palavras, 1):
+            html_code += f"<tr><td>{i}</td><td>{heb}</td><td>{tr}</td><td>{pt}</td></tr>"
+        html_code += "</tbody></table>"
+
+        components.html(html_code, height=600, scrolling=True)
 
     elif menu == "🙏 Orações com as Palavras Sagradas":
         st.header("🙏 Orações com as 22 Palavras Sagradas")
