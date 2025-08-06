@@ -1,4 +1,3 @@
-
 import streamlit as st
 import streamlit.components.v1 as components
 import os
@@ -7,20 +6,23 @@ from PIL import Image
 import time
 import json
 
+# --- Banco de usuários simulado ---
 USER_FILE = "users.json"
 if not os.path.exists(USER_FILE):
-    with open(USER_FILE, "w") as f:
+    with open(USER_FILE, "w", encoding="utf-8") as f:
         json.dump({"teste@exemplo.com": "123456"}, f)
 
-with open(USER_FILE, "r") as f:
+with open(USER_FILE, "r", encoding="utf-8") as f:
     user_db = json.load(f)
 
+# --- Configuração de página ---
 st.set_page_config(
     page_title="Portal de Ativação Divina",
     page_icon="🌟",
     layout="centered",
 )
 
+# --- Estilos gerais ---
 st.markdown("""
 <style>
     .stApp {
@@ -42,13 +44,14 @@ st.markdown("""
 </style>
 """, unsafe_allow_html=True)
 
+# --- Login / Registro ---
 if "logged_in" not in st.session_state:
     st.session_state.logged_in = False
 if "user_email" not in st.session_state:
     st.session_state.user_email = None
 
 if not st.session_state.logged_in:
-    st.title("🔒 Acesso Sagrado - Login")
+    st.title("🔒 Acesso Divino - Login")
     menu_option = st.radio("Selecione uma opção:", ["Login", "Registrar", "Esqueci a Senha"])
 
     if menu_option == "Login":
@@ -71,7 +74,7 @@ if not st.session_state.logged_in:
                 st.warning("Usuário já existe.")
             else:
                 user_db[new_email] = new_password
-                with open(USER_FILE, "w") as f:
+                with open(USER_FILE, "w", encoding="utf-8") as f:
                     json.dump(user_db, f)
                 st.success("Cadastro realizado com sucesso! Faça login.")
 
@@ -82,40 +85,44 @@ if not st.session_state.logged_in:
                 st.info(f"Sua senha é: {user_db[recovery_email]}")
             else:
                 st.error("Email não encontrado na base de dados.")
-elif st.session_state.logged_in:
+
+# --- Conteúdo protegido ---
+else:
     with st.spinner('✨ Ativando energias sagradas... Aguarde um momento...'):
         time.sleep(2)
 
+    # Banner
     banner_path = "top_banner.png"
     if os.path.exists(banner_path):
-        st.markdown("<div style='text-align: center;'>", unsafe_allow_html=True)
         st.image(Image.open(banner_path), width=320)
-        st.markdown("</div>", unsafe_allow_html=True)
 
-    st.title("🌟 Bem-vindo ao Portal da Chave de Cristo")
+    st.title("🌟 Bem-vindo ao Portal de Ativação Divina")
     st.markdown("""
     <div style='text-align: center; font-size: 18px; margin-bottom: 30px;'>
-    As 22 Palavras Sagradas que alinham sua alma com a frequência divina original.
+    Descubra ferramentas espirituais que alinham sua alma com a frequência divina original.
     </div>
     """, unsafe_allow_html=True)
 
+    # Menu principal
     menu = st.selectbox("Escolha uma experiência:", [
         "📜 Lista das 22 Palavras Sagradas",
         "🙏 Orações com as Palavras Sagradas",
         "🔊 Áudio de Ativação da Frequência Divina"
     ])
 
+    # Função para renderizar áudios
     def render_audio(folder):
         path = os.path.join("audios", folder)
         if os.path.exists(path):
-            for f in sorted([x for x in os.listdir(path) if x.endswith(".mp3")],
-                            key=lambda x: int(''.join(filter(str.isdigit, x)) or 0)):
-                st.markdown(f"#### 🎧 {f.replace('_', ' ').replace('.mp3', '').title()}")
-                with open(os.path.join(path, f), "rb") as audio_file:
+            for f_name in sorted([x for x in os.listdir(path) if x.endswith(".mp3")],
+                                 key=lambda x: int(''.join(filter(str.isdigit, x)) or 0)):
+                st.markdown(f"#### 🎧 {f_name.replace('_', ' ').replace('.mp3', '').title()}")
+                with open(os.path.join(path, f_name), "rb") as audio_file:
                     st.audio(audio_file)
-                    st.download_button("⬇️ Baixar Áudio", audio_file, file_name=f)
+                    st.download_button("⬇️ Baixar Áudio", audio_file, file_name=f_name)
                 st.markdown("---")
 
+    # --- Seção: Lista das Palavras ---
     if menu == "📜 Lista das 22 Palavras Sagradas":
         st.header("📜 As 22 Palavras Hebraicas Sagradas")
 
@@ -125,25 +132,27 @@ elif st.session_state.logged_in:
           width: 100%;
           border-collapse: collapse;
         }
-
         .table-scroll th, .table-scroll td {
           border: 1px solid #ffffff55;
           padding: 8px;
           text-align: center;
           color: white;
         }
-
         .table-scroll th {
           background-color: #1e2c48;
         }
-
         .table-scroll tr:nth-child(even) {
           background-color: #162338;
         }
         </style>
         <table class="table-scroll">
           <thead>
-            <tr><th>Nº</th><th>Hebraico</th><th>Transliteração</th><th>Tradução</th></tr>
+            <tr>
+              <th>Nº</th>
+              <th>Hebraico</th>
+              <th>Transliteração</th>
+              <th>Tradução</th>
+            </tr>
           </thead>
           <tbody>
         """
@@ -169,7 +178,7 @@ elif st.session_state.logged_in:
             ("הִתְעוֹרְרוּת", "Hit'or'rut", "Despertar"),
             ("תִּקוָה", "Tikvah", "Esperança"),
             ("מַרְגּוֹעַ", "Margoa", "Alívio"),
-            ("קְרִיאָה", "Kri'ah", "Chamado"),
+            ("קְרִיאָה", "Kri'ah", "Chamado")
         ]
         for i, (heb, tr, pt) in enumerate(palavras, 1):
             html_code += f"<tr><td>{i}</td><td>{heb}</td><td>{tr}</td><td>{pt}</td></tr>"
@@ -177,10 +186,23 @@ elif st.session_state.logged_in:
 
         components.html(html_code, height=600, scrolling=True)
 
+    # --- Seção: Orações ---
     elif menu == "🙏 Orações com as Palavras Sagradas":
         st.header("🙏 Orações com as 22 Palavras Sagradas")
         render_audio("oracoes")
 
+    # --- Seção: Áudios de Frequência ---
     elif menu == "🔊 Áudio de Ativação da Frequência Divina":
         st.header("🔊 Frequências Divinas")
         render_audio("code")
+
+    # --- Oferta Extra: Novena da Transformação ---
+    st.markdown("---")
+    st.header("✨ Novena da Transformação")
+    st.markdown(
+        "🚀 Embarque em uma jornada de 9 dias para renovar sua mente, corpo e espírito. "
+        "Experimente bênçãos profundas e transforme sua vida!"
+    )
+    st.markdown(
+        "[👉 Garanta sua vaga na Novena da Transformação](https://lastlink.com/p/C0962EF86/checkout-payment/)"
+    )
